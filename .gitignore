@@ -1,0 +1,6 @@
+/hello
+/lab-app
+*.exe
+.env
+.idea/
+.vscode/
