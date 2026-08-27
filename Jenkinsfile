@@ -6,7 +6,7 @@ pipeline {
         AR_HOST  = "us-central1-docker.pkg.dev"
         PROJECT_ID = "ops-lab-506804"
         AR_REPO  = "lab-images"
-        IMAGE_NAME = "hello"
+        IMAGE_NAME = "lab-app"
         IMG      = "${AR_HOST}/${PROJECT_ID}/${AR_REPO}/${IMAGE_NAME}"
     }
 
