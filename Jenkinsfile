@@ -31,6 +31,37 @@ pipeline {
                 sh "docker push ${IMG}:${env.TAG}"
             }
         }
+
+        stage('Bump manifest') {
+        when { branch 'main' }
+        environment {
+            GITOPS_REPO = "github.com/Pebintk/lab-git-ops.git"
+            OVERLAY     = "manifests/lab-app/overlays/dev"
+        }
+        steps {
+            withCredentials([string(credentialsId: 'gitops-token', variable: 'TOKEN')]) {
+            sh '''
+                set -euo pipefail
+                rm -rf gitops
+                git clone --depth 1 "https://x-access-token:${TOKEN}@${GITOPS_REPO}" gitops
+                cd gitops/${OVERLAY}
+
+                kustomize edit set image ${IMG}=${IMG}:${TAG}
+
+                cd "$(git rev-parse --show-toplevel)"
+                if git diff --quiet; then
+                echo "manifest already at ${TAG}, nothing to commit"
+                exit 0
+                fi
+
+                git config user.email "jenkins@lab.local"
+                git config user.name  "jenkins-ci"
+                git commit -am "deploy lab-app ${TAG} (build ${BUILD_NUMBER})"
+                git push origin HEAD:main
+            '''
+            }
+        }
+        }
     }
 
     post {
