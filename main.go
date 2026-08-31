@@ -18,7 +18,14 @@ func versionHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		hostname = "unknown"
 	}
-	fmt.Fprintf(w, "version=%s hostname=%s\n", version, hostname)
+	// Injected from the Kubernetes Secret that External Secrets Operator builds
+	// from Secret Manager. Falls back so the binary still runs outside the
+	// cluster, where nothing sets it.
+	greeting := os.Getenv("GREETING")
+	if greeting == "" {
+		greeting = "(unset)"
+	}
+	fmt.Fprintf(w, "version=%s hostname=%s greeting=%s\n", version, hostname, greeting)
 }
 
 func main() {
