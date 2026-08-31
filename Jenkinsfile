@@ -39,7 +39,7 @@ pipeline {
             }
             steps {
                 withCredentials([string(credentialsId: 'gitops-token', variable: 'TOKEN')]) {
-                sh '''
+                sh '''#!/usr/bin/env bash
                     set -euo pipefail
                     rm -rf gitops
                     git clone --depth 1 "https://x-access-token:${TOKEN}@${GITOPS_REPO}" gitops
