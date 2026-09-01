@@ -25,7 +25,7 @@ func versionHandler(w http.ResponseWriter, r *http.Request) {
 	if greeting == "" {
 		greeting = "(unset)"
 	}
-	fmt.Fprintf(w, "version=%s hostname=%s greeting=%s\n", version, hostname, greeting)
+	fmt.Fprintf(w, "Lab App, version=%s, hostname=%s, greeting=%s\n", version, hostname, greeting)
 }
 
 func main() {
